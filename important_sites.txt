@@ -1,0 +1,13 @@
+Ok so, here are some very important websites that I'll 100% forgor :skull: if I don't put them here
+
+List of some important CAN devices and links to their docs: https://docs.wpilib.org/en/stable/docs/software/can-devices/index.html
+VictorSPX Motor Controller (CAN) documentation: https://store.ctr-electronics.com/content/api/cpp/html/classctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_victor_s_p_x.html
+Somewhat cool tutorial, maybe? It's in java but might be good for some conceptual stuff: https://www.youtube.com/watch?v=ihO-mw_4Qpo
+Links to vendor library JSONs: https://docs.wpilib.org/en/latest/docs/software/vscode-overview/3rd-party-libraries.html
+CAN Configuration docs: https://docs.ctre-phoenix.com/en/stable/ch08_BringUpCAN.html
+
+How to install all the stuff you need (mostly Phoenix stuff): https://docs.ctre-phoenix.com/en/stable/ch05_PrepWorkstation.html
+How to prepare the RIO: https://docs.ctre-phoenix.com/en/stable/ch06_PrepRobot.html
+
+LabVIEW Software: https://www.ni.com/en-ca/support/downloads/software-products/download.labview-software-for-frc.html#414304
+FRC Game Tools: https://www.ni.com/en-ca/support/downloads/drivers/download.frc-game-tools.html#440024
