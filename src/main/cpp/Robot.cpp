@@ -3,40 +3,15 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-#include "CanID.h"
-
-#include <iostream>
-#include <sstream>
-#include <string>
-
-#include <fmt/core.h>
-
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <ctre/phoenix/motorcontrol/can/VictorSPX.h>
-#include <ctre/phoenix/motorcontrol/NeutralMode.h>
-
-typedef ctre::phoenix::motorcontrol::can::VictorSPX VictorSPX;
-typedef ctre::phoenix::motorcontrol::NeutralMode NeutralMode;
+#define FEED_BUTTON 5
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
-  // Begin initialization
-  frc::SmartDashboard::PutString("InitMessage", "Initializing...");
-
-  // Read some PDP stats
-  frc::PowerDistribution pdp{ID_PDP, TYPE_PDP};
-
-  double v = pdp.GetVoltage();
-  double temp = pdp.GetTemperature();
-
-  std::ostringstream initMsg;
-  initMsg << temp << "°C @ " << v << "V";
-
-  // Print the new message
-  frc::SmartDashboard::PutString("InitMessage", initMsg.str());
+  initPDP();
+  initMotorControllers(NeutralMode::Brake, NeutralMode::Coast);
 }
 
 /**
@@ -82,41 +57,58 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopInit() {
-  // Init all the Motor Controllers
-  VictorSPX leftMotor(ID_LMOTOR1);
-  VictorSPX leftMotor2(ID_LMOTOR2);
+  // Set all our motors to nothing
+  mRight.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  mLeft.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  lastDriveRight = 0.0;
+  lastDriveLeft = 0.0;
 
-  VictorSPX rightMotor(ID_RMOTOR1);
-  VictorSPX rightMotor2(ID_RMOTOR2);
-
-  VictorSPX motorS(ID_SHOOTER);
-  VictorSPX motorF(ID_FEEDER);
-
-  // Set the neutral modes
-  leftMotor.SetNeutralMode(NeutralMode::Brake);
-  leftMotor2.SetNeutralMode(NeutralMode::Brake);
-  rightMotor.SetNeutralMode(NeutralMode::Brake);
-  rightMotor2.SetNeutralMode(NeutralMode::Brake);
-
-  motorS.SetNeutralMode(NeutralMode::Coast);
-  motorF.SetNeutralMode(NeutralMode::Coast);
-
-  // Set the inversions
-  leftMotor.SetInverted(false);
-  leftMotor2.SetInverted(false);
-  rightMotor.SetInverted(true);
-  rightMotor2.SetInverted(true);
-
-  motorS.SetInverted(false);
-  motorF.SetInverted(false);
-
-  // Set some follow stuff
-  leftMotor2.Follow(leftMotor);
-  rightMotor2.Follow(rightMotor);
+  mShoot.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  mFeed.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  lastShooterState = false;
+  lastFeederState = false;
 }
 
 void Robot::TeleopPeriodic() {
   // This is where all our fun stuff goes :)
+  // Read the joystick, calculate the drive stuff
+  double x = stick.GetX();  // In terms of arcade drive, this is speed
+  double y = stick.GetY();  // In terms of arcade drive, this is turn
+
+  double leftPower = (y + x) / 2;
+  double rightPower = (y - x) / 2;
+
+  // Update the LEFT drive
+  if (leftPower != lastDriveLeft) {
+    // Update the LEFT drive
+    mLeft.Set(VictorSPXControlMode::PercentOutput, leftPower * S_LEFT_DRIVE);
+    lastDriveLeft = leftPower;
+  }
+
+  // Update the RIGHT drive
+  if (rightPower != lastDriveRight) {
+    // Update the RIGHT drive
+    mRight.Set(VictorSPXControlMode::PercentOutput, rightPower * S_RIGHT_DRIVE);
+    lastDriveRight = rightPower;
+  }
+
+  // Update the Trigger and stuff
+  bool trigger = stick.GetTrigger();
+  bool thumbButton = stick.GetRawButton(FEED_BUTTON);
+
+  // Update the SHOOTER
+  if (trigger != lastShooterState) {
+    // Update the SHOOTER
+    mShoot.Set(VictorSPXControlMode::PercentOutput, trigger * S_SHOOTER_MOTOR);
+    lastShooterState = trigger;
+  }
+
+  // Update the FEEDER
+  if (thumbButton != lastFeederState) {
+    // Update the FEEDER
+    mFeed.Set(VictorSPXControlMode::PercentOutput, thumbButton * S_FEEDER_MOTOR);
+    lastFeederState = thumbButton;
+  } 
 }
 
 void Robot::DisabledInit() {}
@@ -126,6 +118,46 @@ void Robot::DisabledPeriodic() {}
 void Robot::TestInit() {}
 
 void Robot::TestPeriodic() {}
+
+void Robot::initPDP() {
+  // Begin initialization
+  frc::SmartDashboard::PutString("InitMessage", "Initializing...");
+
+  double v = pdp.GetVoltage();
+  double temp = pdp.GetTemperature();
+
+  std::ostringstream initMsg;
+  initMsg << temp << "°C @ " << v << "V";
+
+  // Print the new message
+  frc::SmartDashboard::PutString("InitMessage", initMsg.str());
+}
+
+void Robot::initMotorControllers(NeutralMode driveNeutralMode, NeutralMode scoreNeutralMode) {
+  // Do all the attachment stuff here
+  // Set the neutral modes
+  mRight.SetNeutralMode(driveNeutralMode);
+  mRight2.SetNeutralMode(driveNeutralMode);
+  mLeft.SetNeutralMode(driveNeutralMode);
+  mLeft2.SetNeutralMode(driveNeutralMode);
+  
+
+  mShoot.SetNeutralMode(scoreNeutralMode);
+  mFeed.SetNeutralMode(scoreNeutralMode);
+
+  // Set the inversions
+  mRight.SetInverted(false);
+  mRight2.SetInverted(false);
+  mLeft.SetInverted(true);
+  mLeft2.SetInverted(true);
+
+  mShoot.SetInverted(false);
+  mFeed.SetInverted(false);
+
+  // Set some follow stuff
+  mRight2.Follow(mRight);
+  mLeft2.Follow(mLeft);
+}
 
 #ifndef RUNNING_FRC_TESTS
 int main() {
