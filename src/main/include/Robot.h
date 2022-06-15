@@ -5,7 +5,7 @@
 #pragma once
 
 #include <string>
-#include "CanID.h"
+#include "PortMapping.h"
 #include "Sensitivity.h"
 
 #include <frc/TimedRobot.h>

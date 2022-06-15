@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-#define FEED_BUTTON 5
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
@@ -72,8 +71,8 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
   // This is where all our fun stuff goes :)
   // Read the joystick, calculate the drive stuff
-  double x = stick.GetX();  // In terms of arcade drive, this is speed
-  double y = stick.GetY();  // In terms of arcade drive, this is turn
+  double x = -stick.GetX() * S_JOYSTICK;  // In terms of arcade drive, this is turn
+  double y = stick.GetY() * S_JOYSTICK;  // In terms of arcade drive, this is speed
 
   double leftPower = (y + x) / 2;
   double rightPower = (y - x) / 2;
