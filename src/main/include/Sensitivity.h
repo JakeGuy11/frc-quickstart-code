@@ -1,5 +1,5 @@
-#define S_SHOOTER_MOTOR 1.0
-#define S_FEEDER_MOTOR 1.0
+#define S_SHOOTER_MOTOR_HARD 1.0
+#define S_FEEDER_MOTOR_HARD 1.0
 
 #define S_JOYSTICK 1.25
 

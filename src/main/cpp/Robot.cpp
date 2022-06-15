@@ -92,21 +92,36 @@ void Robot::TeleopPeriodic() {
   }
 
   // Update the Trigger and stuff
-  bool trigger = stick.GetTrigger();
-  bool thumbButton = stick.GetRawButton(FEED_BUTTON);
+  bool shoot = stick.GetRawButton(SHOOT_BUTTON);
+  bool feed = stick.GetRawButton(FEED_BUTTON);
+
+  bool retractShoot = stick.GetRawButton(SHOOT_RETRACT_BUTTON);
+  bool retractFeed = stick.GetRawButton(FEED_RETRACT_BUTTON);
+
+  int shootValue;
+  int feedValue;
+
+  // Update the *values* for shoot and feed
+  if (retractShoot) shootValue = -1;
+  else if (shoot) shootValue = 1;
+  else shootValue = 0;
+
+  if (retractFeed) feedValue = -1;
+  else if (feed) feedValue = 1;
+  else feedValue = 0;
 
   // Update the SHOOTER
-  if (trigger != lastShooterState) {
+  if (shootValue != lastShooterState) {
     // Update the SHOOTER
-    mShoot.Set(VictorSPXControlMode::PercentOutput, trigger * S_SHOOTER_MOTOR);
-    lastShooterState = trigger;
+    mShoot.Set(VictorSPXControlMode::PercentOutput, shootValue * S_SHOOTER_MOTOR_HARD);
+    lastShooterState = shootValue;
   }
 
   // Update the FEEDER
-  if (thumbButton != lastFeederState) {
+  if (feedValue != lastFeederState) {
     // Update the FEEDER
-    mFeed.Set(VictorSPXControlMode::PercentOutput, thumbButton * S_FEEDER_MOTOR);
-    lastFeederState = thumbButton;
+    mFeed.Set(VictorSPXControlMode::PercentOutput, feedValue * S_FEEDER_MOTOR_HARD);
+    lastFeederState = feedValue;
   } 
 }
 
