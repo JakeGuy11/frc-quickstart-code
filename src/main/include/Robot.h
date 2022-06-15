@@ -53,6 +53,8 @@ class Robot : public frc::TimedRobot {
   double lastDriveRight;
   double lastDriveLeft;
 
+  double autonomousStartTime;
+
   void initPDP();
   void initMotorControllers(NeutralMode driveNeutralMode, NeutralMode scoreNeutralMode);
 

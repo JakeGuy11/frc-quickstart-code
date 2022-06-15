@@ -13,7 +13,7 @@ void Robot::RobotInit() {
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
   initPDP();
-  initMotorControllers(NeutralMode::Brake, NeutralMode::Coast);
+  initMotorControllers(NeutralMode::Brake, NeutralMode::Brake);
 }
 
 /**
@@ -38,23 +38,23 @@ void Robot::RobotPeriodic() {}
  * make sure to add them to the chooser code above as well.
  */
 void Robot::AutonomousInit() {
-  m_autoSelected = m_chooser.GetSelected();
-  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
-  //     kAutoNameDefault);
-  fmt::print("Auto selected: {}\n", m_autoSelected);
-
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
-    // Default Auto goes here
-  }
+  autonomousStartTime = frc::Timer::GetFPGATimestamp().value();
+  fmt::print("Hold on, shit's about to get messy :)");
+  fmt::print("(I haven't tested the auto yet, move everything out of the way!)");
 }
 
 void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
+  double currentAutoTime = frc::Timer::GetFPGATimestamp().value() - autonomousStartTime;
+  if (currentAutoTime < 5000) {
+    // It's to early; do nothing
+  } else if (currentAutoTime < 6000) {
+    // Drive forward for a second
+    mShoot.Set(VictorSPXControlMode::PercentOutput, 0.5);
+    mFeed.Set(VictorSPXControlMode::PercentOutput, 0.5);
   } else {
-    // Default Auto goes here
+    // STOP EVERYTHING
+    mShoot.Set(VictorSPXControlMode::PercentOutput, 0.0);
+    mFeed.Set(VictorSPXControlMode::PercentOutput, 0.0);
   }
 }
 
