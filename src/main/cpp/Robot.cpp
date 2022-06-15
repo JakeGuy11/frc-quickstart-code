@@ -72,6 +72,10 @@ void Robot::AutonomousPeriodic() {
       break;
     case AutoState::FINISHED:
       // no thoughts head empty
+      mRight.Set(VictorSPXControlMode::PercentOutput, 0.0);
+      mLeft.Set(VictorSPXControlMode::PercentOutput, 0.0);
+      mShoot.Set(VictorSPXControlMode::PercentOutput, 0.0);
+      mFeed.Set(VictorSPXControlMode::PercentOutput, 0.0);
       break;
   }
 }
