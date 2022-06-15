@@ -1,8 +1,11 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) 2022, JakeGuy11 and FRC Team 7722
 
 #include "Robot.h"
+
+// TODO: put in separate file (someone who knows more about headers n stuff can do that)
+double mapValueFromZeroOne(double inValue, double minOut, double maxOut) {
+  return minOut + ((maxOut - minOut) * inValue);
+}
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
@@ -101,6 +104,12 @@ void Robot::TeleopPeriodic() {
   int shootValue;
   int feedValue;
 
+  // Update some sensitivity stuff
+  // Also doing some math to make sure it's between 0 and 1
+  double rawActuatorSensitivity = ((-stick.GetThrottle()) + 1)/2;
+  double calculatedShooterSensitivity = mapValueFromZeroOne(rawActuatorSensitivity, 0.3, 1.0) * S_SHOOTER_MOTOR_HARD;
+  double calculatedFeederSensitivity = mapValueFromZeroOne(rawActuatorSensitivity, 0.6, 1.0) * S_FEEDER_MOTOR_HARD;
+
   // Update the *values* for shoot and feed
   if (retractShoot) shootValue = -1;
   else if (shoot) shootValue = 1;
@@ -113,14 +122,14 @@ void Robot::TeleopPeriodic() {
   // Update the SHOOTER
   if (shootValue != lastShooterState) {
     // Update the SHOOTER
-    mShoot.Set(VictorSPXControlMode::PercentOutput, shootValue * S_SHOOTER_MOTOR_HARD);
+    mShoot.Set(VictorSPXControlMode::PercentOutput, shootValue * calculatedShooterSensitivity);
     lastShooterState = shootValue;
   }
 
   // Update the FEEDER
   if (feedValue != lastFeederState) {
     // Update the FEEDER
-    mFeed.Set(VictorSPXControlMode::PercentOutput, feedValue * S_FEEDER_MOTOR_HARD);
+    mFeed.Set(VictorSPXControlMode::PercentOutput, feedValue * calculatedFeederSensitivity);
     lastFeederState = feedValue;
   } 
 }

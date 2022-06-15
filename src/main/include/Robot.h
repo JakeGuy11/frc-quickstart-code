@@ -32,9 +32,6 @@ class Robot : public frc::TimedRobot {
   void TestInit() override;
   void TestPeriodic() override;
 
-  void initPDP();
-  void initMotorControllers(NeutralMode driveNeutralMode, NeutralMode scoreNeutralMode);
-
  private:
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoNameDefault = "Default";
@@ -55,5 +52,8 @@ class Robot : public frc::TimedRobot {
   bool lastFeederState;
   double lastDriveRight;
   double lastDriveLeft;
+
+  void initPDP();
+  void initMotorControllers(NeutralMode driveNeutralMode, NeutralMode scoreNeutralMode);
 
 };
