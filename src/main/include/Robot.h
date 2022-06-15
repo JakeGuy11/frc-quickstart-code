@@ -7,6 +7,7 @@
 #include <string>
 #include "PortMapping.h"
 #include "Sensitivity.h"
+#include "Autonomous.h"
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
@@ -53,7 +54,7 @@ class Robot : public frc::TimedRobot {
   double lastDriveRight;
   double lastDriveLeft;
 
-  double autonomousStartTime;
+  MechaPhoenixAuto autoManager{0.0};
 
   void initPDP();
   void initMotorControllers(NeutralMode driveNeutralMode, NeutralMode scoreNeutralMode);
