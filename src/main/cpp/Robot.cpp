@@ -20,11 +20,11 @@ void Robot::RobotInit() {
  * This function is called every robot packet, no matter the mode. Use
  * this for items like diagnostics that you want ran during disabled,
  * autonomous, teleoperated and test.
- *
+ *\
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() { }
 
 /**
  * This autonomous (along with the chooser code above) shows how to select
@@ -96,8 +96,8 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
   // This is where all our fun stuff goes :)
   // Read the joystick, calculate the drive stuff
-  double x = -stick.GetX() * S_JOYSTICK;  // In terms of arcade drive, this is turn
-  double y = stick.GetY() * S_JOYSTICK;  // In terms of arcade drive, this is speed
+  double x = stick.GetX() * S_JOYSTICK;  // In terms of arcade drive, this is turn
+  double y = -stick.GetY() * S_JOYSTICK;  // In terms of arcade drive, this is speed
 
   double leftPower = (y + x) / 2;
   double rightPower = (y - x) / 2;
@@ -117,7 +117,7 @@ void Robot::TeleopPeriodic() {
   }
 
   // Update the Trigger and stuff
-  bool shoot = stick.GetRawButton(SHOOT_BUTTON);
+  bool shoot = stick.GetTrigger();
   bool feed = stick.GetRawButton(FEED_BUTTON);
 
   bool retractShoot = stick.GetRawButton(SHOOT_RETRACT_BUTTON);
@@ -128,9 +128,9 @@ void Robot::TeleopPeriodic() {
 
   // Update some sensitivity stuff
   // Also doing some math to make sure it's between 0 and 1
-  double rawActuatorSensitivity = ((-stick.GetThrottle()) + 1)/2;
-  double calculatedShooterSensitivity = mapValueFromZeroOne(rawActuatorSensitivity, 0.3, 1.0) * S_SHOOTER_MOTOR_HARD;
-  double calculatedFeederSensitivity = mapValueFromZeroOne(rawActuatorSensitivity, 0.6, 1.0) * S_FEEDER_MOTOR_HARD;
+  // double rawActuatorSensitivity = ((-stick.GetThrottle()) + 1)/2;
+  // double calculatedShooterSensitivity = mapValueFromZeroOne(rawActuatorSensitivity, 0.3, 1.0) * S_SHOOTER_MOTOR_HARD;
+  // double calculatedFeederSensitivity = mapValueFromZeroOne(rawActuatorSensitivity, 0.6, 1.0) * S_FEEDER_MOTOR_HARD;
 
   // Update the *values* for shoot and feed
   if (retractShoot) shootValue = -1;
@@ -144,14 +144,14 @@ void Robot::TeleopPeriodic() {
   // Update the SHOOTER
   if (shootValue != lastShooterState) {
     // Update the SHOOTER
-    mShoot.Set(VictorSPXControlMode::PercentOutput, shootValue * calculatedShooterSensitivity);
+    mShoot.Set(VictorSPXControlMode::PercentOutput, shootValue * S_SHOOTER_MOTOR_HARD);
     lastShooterState = shootValue;
   }
 
   // Update the FEEDER
   if (feedValue != lastFeederState) {
     // Update the FEEDER
-    mFeed.Set(VictorSPXControlMode::PercentOutput, feedValue * calculatedFeederSensitivity);
+    mFeed.Set(VictorSPXControlMode::PercentOutput, feedValue * S_FEEDER_MOTOR_HARD);
     lastFeederState = feedValue;
   } 
 }

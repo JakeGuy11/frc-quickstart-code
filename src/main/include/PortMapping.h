@@ -2,10 +2,9 @@
 
 // Joystick mapping stuff
 #define JOYSTICK_PORT 0
-#define SHOOT_BUTTON 0 // Trigger
 #define FEED_BUTTON 2
-#define SHOOT_RETRACT_BUTTON 6
-#define FEED_RETRACT_BUTTON 7
+#define SHOOT_RETRACT_BUTTON 4
+#define FEED_RETRACT_BUTTON 3
 
 // Other CAN Devices
 #define ID_PDP 0

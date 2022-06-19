@@ -1,7 +1,7 @@
-#define S_SHOOTER_MOTOR_HARD 1.0
-#define S_FEEDER_MOTOR_HARD 1.0
+#define S_SHOOTER_MOTOR_HARD -0.35
+#define S_FEEDER_MOTOR_HARD -0.35
 
-#define S_JOYSTICK 1.25
+#define S_JOYSTICK 1.0
 
 #define S_LEFT_DRIVE 1.0
 #define S_RIGHT_DRIVE 1.0
