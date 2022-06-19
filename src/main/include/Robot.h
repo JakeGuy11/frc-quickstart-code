@@ -51,6 +51,7 @@ class Robot : public frc::TimedRobot {
 
   bool lastShooterState;
   bool lastFeederState;
+  bool hardMode = false;
   double lastDriveRight;
   double lastDriveLeft;
 

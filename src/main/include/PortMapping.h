@@ -5,6 +5,8 @@
 #define FEED_BUTTON 2
 #define SHOOT_RETRACT_BUTTON 4
 #define FEED_RETRACT_BUTTON 3
+#define SOFT_MODE_BUTTON 10
+#define HARD_MODE_BUTTON 11
 
 // Other CAN Devices
 #define ID_PDP 0

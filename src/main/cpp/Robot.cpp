@@ -126,11 +126,9 @@ void Robot::TeleopPeriodic() {
   int shootValue;
   int feedValue;
 
-  // Update some sensitivity stuff
-  // Also doing some math to make sure it's between 0 and 1
-  // double rawActuatorSensitivity = ((-stick.GetThrottle()) + 1)/2;
-  // double calculatedShooterSensitivity = mapValueFromZeroOne(rawActuatorSensitivity, 0.3, 1.0) * S_SHOOTER_MOTOR_HARD;
-  // double calculatedFeederSensitivity = mapValueFromZeroOne(rawActuatorSensitivity, 0.6, 1.0) * S_FEEDER_MOTOR_HARD;
+  // Update the mode
+  if (stick.GetRawButton(SOFT_MODE_BUTTON)) hardMode = false;
+  else if (stick.GetRawButton(HARD_MODE_BUTTON)) hardMode = true;
 
   // Update the *values* for shoot and feed
   if (retractShoot) shootValue = -1;
@@ -144,14 +142,16 @@ void Robot::TeleopPeriodic() {
   // Update the SHOOTER
   if (shootValue != lastShooterState) {
     // Update the SHOOTER
-    mShoot.Set(VictorSPXControlMode::PercentOutput, shootValue * S_SHOOTER_MOTOR_HARD);
+    if (hardMode) mShoot.Set(VictorSPXControlMode::PercentOutput, shootValue * S_SHOOTER_MOTOR_HARD);
+    else mShoot.Set(VictorSPXControlMode::PercentOutput, shootValue * S_SHOOTER_MOTOR_SOFT);
     lastShooterState = shootValue;
   }
 
   // Update the FEEDER
   if (feedValue != lastFeederState) {
     // Update the FEEDER
-    mFeed.Set(VictorSPXControlMode::PercentOutput, feedValue * S_FEEDER_MOTOR_HARD);
+    if (hardMode) mFeed.Set(VictorSPXControlMode::PercentOutput, feedValue * S_FEEDER_MOTOR_HARD);
+    else mFeed.Set(VictorSPXControlMode::PercentOutput, feedValue * S_SHOOTER_MOTOR_SOFT);
     lastFeederState = feedValue;
   } 
 }
