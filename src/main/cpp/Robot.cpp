@@ -38,46 +38,46 @@ void Robot::RobotPeriodic() { }
  * make sure to add them to the chooser code above as well.
  */
 void Robot::AutonomousInit() {
-  autoManager = MechaPhoenixAuto(frc::Timer::GetFPGATimestamp().value());
-  fmt::print("Hold on, shit's about to get messy :)");
-  fmt::print("(I haven't tested the auto yet, move everything out of the way!)");
+  // autoManager = MechaPhoenixAuto(frc::Timer::GetFPGATimestamp().value());
+  // fmt::print("Hold on, shit's about to get messy :)");
+  // fmt::print("(I haven't tested the auto yet, move everything out of the way!)");
 }
 
 void Robot::AutonomousPeriodic() {
-  autoManager.autoUpdate(frc::Timer::GetFPGATimestamp().value());
+  // autoManager.autoUpdate(frc::Timer::GetFPGATimestamp().value());
 
-  switch (autoManager.getState()) {
-    case AutoState::INIT:
-      // Do nothing
-      break;
-    case AutoState::INITIAL_WAIT:
-      // Still do nothing :)
-      break;
-    case AutoState::SPIN:
-      // Spin the robot SLOWLY
-      mRight.Set(VictorSPXControlMode::PercentOutput, 0.3);
-      mLeft.Set(VictorSPXControlMode::PercentOutput, -0.3);
-      break;
-    case AutoState::SPIN_UP_SHOOTER:
-      // Turn on the shooter motor
-      mRight.Set(VictorSPXControlMode::PercentOutput, 0.0);
-      mLeft.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  // switch (autoManager.getState()) {
+  //   case AutoState::INIT:
+  //     // Do nothing
+  //     break;
+  //   case AutoState::INITIAL_WAIT:
+  //     // Still do nothing :)
+  //     break;
+  //   case AutoState::SPIN:
+  //     // Spin the robot SLOWLY
+  //     mRight.Set(VictorSPXControlMode::PercentOutput, 0.3);
+  //     mLeft.Set(VictorSPXControlMode::PercentOutput, -0.3);
+  //     break;
+  //   case AutoState::SPIN_UP_SHOOTER:
+  //     // Turn on the shooter motor
+  //     mRight.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  //     mLeft.Set(VictorSPXControlMode::PercentOutput, 0.0);
 
-      mShoot.Set(VictorSPXControlMode::PercentOutput, 0.8);
-      break;
-    case AutoState::SHOOT:
-      // Turn on the feeder to actually fire a ball
-      mShoot.Set(VictorSPXControlMode::PercentOutput, 0.8);
-      mFeed.Set(VictorSPXControlMode::PercentOutput, 0.8);
-      break;
-    case AutoState::FINISHED:
-      // no thoughts head empty
-      mRight.Set(VictorSPXControlMode::PercentOutput, 0.0);
-      mLeft.Set(VictorSPXControlMode::PercentOutput, 0.0);
-      mShoot.Set(VictorSPXControlMode::PercentOutput, 0.0);
-      mFeed.Set(VictorSPXControlMode::PercentOutput, 0.0);
-      break;
-  }
+  //     mShoot.Set(VictorSPXControlMode::PercentOutput, 0.8);
+  //     break;
+  //   case AutoState::SHOOT:
+  //     // Turn on the feeder to actually fire a ball
+  //     mShoot.Set(VictorSPXControlMode::PercentOutput, 0.8);
+  //     mFeed.Set(VictorSPXControlMode::PercentOutput, 0.8);
+  //     break;
+  //   case AutoState::FINISHED:
+  //     // no thoughts head empty
+  //     mRight.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  //     mLeft.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  //     mShoot.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  //     mFeed.Set(VictorSPXControlMode::PercentOutput, 0.0);
+  //     break;
+  // }
 }
 
 void Robot::TeleopInit() {
@@ -175,7 +175,7 @@ void Robot::initPDP() {
   initMsg << temp << "°C @ " << v << "V";
 
   // Print the new message
-  frc::SmartDashboard::PutString("InitMessage", initMsg.str());
+  fmt::print(initMsg.str());
 }
 
 void Robot::initMotorControllers(NeutralMode driveNeutralMode, NeutralMode scoreNeutralMode) {

@@ -55,7 +55,7 @@ class Robot : public frc::TimedRobot {
   double lastDriveRight;
   double lastDriveLeft;
 
-  MechaPhoenixAuto autoManager{0.0};
+  // MechaPhoenixAuto autoManager{0.0};
 
   void initPDP();
   void initMotorControllers(NeutralMode driveNeutralMode, NeutralMode scoreNeutralMode);
